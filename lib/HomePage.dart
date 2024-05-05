@@ -27,18 +27,17 @@ class _HomePageState extends State<HomePage> {
         title: Text("Employee App"),
       ),
       body: Container(
-        padding: EdgeInsets.all(10.0), 
+        padding: EdgeInsets.all(10.0),
         child: StreamBuilder<List<Employee>>(
           stream: _employeeBloc.employeeListStream,
           builder:
               (BuildContext context, AsyncSnapshot<List<Employee>> snapshot) {
             return ListView.builder(
-              itemCount: snapshot.data?.length ?? 0,
+              itemCount: snapshot.hasData ? snapshot.data!.length : 0,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: EdgeInsets.only(
-                      top: index == 0 ? 0 : 8.0,
-                      bottom: 8.0), 
+                  padding:
+                      EdgeInsets.only(top: index == 0 ? 0 : 8.0, bottom: 8.0),
                   child: Card(
                     elevation: 5.0,
                     shape: RoundedRectangleBorder(
@@ -77,8 +76,11 @@ class _HomePageState extends State<HomePage> {
                             icon: Icon(Icons.thumb_up_sharp),
                             color: Colors.green,
                             onPressed: () {
-                              _employeeBloc.employeeSalaryIncrement
-                                  .add(snapshot.data![index]);
+                              if (snapshot.hasData &&
+                                  index < snapshot.data!.length) {
+                                _employeeBloc.employeeSalaryIncrement
+                                    .add(snapshot.data![index]);
+                              }
                             },
                           ),
                         ),
@@ -87,8 +89,11 @@ class _HomePageState extends State<HomePage> {
                             icon: Icon(Icons.thumb_down_sharp),
                             color: Colors.red,
                             onPressed: () {
-                              _employeeBloc.employeeSalaryIncrement
-                                  .add(snapshot.data![index]);
+                              if (snapshot.hasData &&
+                                  index < snapshot.data!.length) {
+                                _employeeBloc.employeeSalaryDecrement
+                                    .add(snapshot.data![index]);
+                              }
                             },
                           ),
                         ),
